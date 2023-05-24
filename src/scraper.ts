@@ -26,9 +26,9 @@ export async function scrape(inputUrl: URL) {
     );
     const uniqueHrefs = Array.from(new Set(removeAnchors));
     const sortedHrefs = uniqueHrefs.sort();
-    console.debug(`Found ${sortedHrefs.length} links`)
+    console.debug(`Found ${sortedHrefs.length} links`);
     return sortedHrefs;
   }
-  console.error("No links found, could not parse the document")
+  console.error("No links found, could not parse the document");
   return [];
 }

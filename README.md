@@ -1,6 +1,7 @@
 # Monzo Code Challenge
 
-[Code Challenge](./CHALLENGE.md) completed by [Kyle Welsby](https://github.com/kylewelsby).
+[Code Challenge](./CHALLENGE.md) completed by
+[Kyle Welsby](https://github.com/kylewelsby).
 
 ## ⚡️ System Dependencies
 
@@ -15,8 +16,8 @@ _At the time of writing the latest stable version of Deno is 1.33.4_
 deno run --allow-net mod.ts https://monzo.com/
 ```
 
-
 ## 🧪 Testing
+
 Run the unit tests with the following commands.
 
 ```
