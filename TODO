@@ -3,6 +3,9 @@
   - https://examples.deno.land/command-line-arguments
   I will use `Deno.args` to get the arguments passed to the cli.
   I have additional room to use flags to accept optons or modifiers if needed.
-☐ Research methods concurrency executing scripts with Deno
-☐ Write a simple script to fetch the hyperlinks found on a page
-☐ Implement the script to
+✔ Research methods concurrency executing scripts with Deno @started(23-05-24 09:40) @done(23-05-24 09:44) @lasted(4m15s)
+  Theres a concept in Deno that allow the runtime to launch [workers](https://deno.com/manual@v1.33.4/runtime/workers) on different threads.
+  Ths might be useful to crawl inner pages and spread the load to different thread on the machine.
+✔ Write a simple script to fetch the hyperlinks found on a page @started(23-05-24 09:44) @done(23-05-24 10:16) @lasted(32m4s)
+☐ Expand the simple script to crawl deeper into the site @started(23-05-24 10:16)
+  Ensure the script is not crawling the same page twice
