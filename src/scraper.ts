@@ -1,5 +1,3 @@
-import { scrape } from "./scrape.ts";
-
 /**
  * Scrape the website recursively for urls
  *
@@ -12,22 +10,72 @@ import { scrape } from "./scrape.ts";
 export async function scrapeRecursive(
   inputUrl: URL,
   maxLevel = 4,
-  level = 0,
-  visitedUrls: Set<string> = new Set<string>(),
+  fileOutput: string | undefined = undefined,
 ) {
-  visitedUrls.add(inputUrl.href);
-  if (level > maxLevel) {
-    console.debug(`Level:${level} - Is too deep, returning`);
-    return Array.from(visitedUrls);
+  console.log(`🔎 Scraping urls from ${inputUrl.href}`);
+  urlQueue.push(inputUrl.href);
+  if (fileOutput) {
+    /* Clear the file */
+    await Deno.writeTextFile(fileOutput, inputUrl.href + "\n", {
+      append: false,
+    });
   }
-  console.debug(`Level:${level} - Scraping recursive ${inputUrl.href}`);
-  const topLevelUrls = await scrape(inputUrl);
+  await processQueue(maxLevel, fileOutput);
 
-  for (const link of topLevelUrls) {
-    if (!visitedUrls.has(link)) {
-      await scrapeRecursive(new URL(link), maxLevel, level + 1, visitedUrls);
-    }
-  }
-
+  console.log(`✅ Completed with ${visitedUrls.size} urls`);
   return Array.from(visitedUrls);
+}
+
+const urlQueue: string[] = [];
+const visitedUrls = new Set<string>();
+
+async function processQueue(
+  maxLevel = 2,
+  fileOutput: string | undefined = undefined,
+) {
+  let level = 0;
+  while (urlQueue.length > 0) {
+    const urls = urlQueue.splice(0, Math.min(100, urlQueue.length));
+    urls.forEach((url) => visitedUrls.add(url));
+    let newUrls;
+    if (level < maxLevel) {
+      level++;
+      newUrls = await recursiveWorker(urls);
+      console.log(`👀 Level: ${level} - ${newUrls.length} urls`);
+    } else {
+      newUrls = urls;
+    }
+    newUrls.filter((url) => !visitedUrls.has(url) && !urlQueue.includes(url))
+      .forEach(async (url) => {
+        urlQueue.push(url);
+        if (fileOutput) {
+          await Deno.writeTextFile(fileOutput, url + "\n", { append: true });
+        }
+      });
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+}
+
+function recursiveWorker(
+  parentUrls: string[],
+): Promise<string[]> {
+  return new Promise((resolve) => {
+    const worker = new Worker(new URL("./worker.ts", import.meta.url).href, {
+      type: "module",
+    });
+    worker.postMessage({
+      urls: parentUrls,
+    });
+    worker.onmessage = (e) => {
+      const urls = e.data as string[];
+      worker.terminate();
+      resolve(urls);
+    };
+    worker.onerror = (e) => {
+      console.error(e);
+      worker.terminate();
+      resolve([]);
+    };
+  });
 }

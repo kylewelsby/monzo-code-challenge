@@ -8,7 +8,7 @@ import { parse } from "https://deno.land/std@0.184.0/flags/mod.ts";
 import { scrapeRecursive } from "./src/scraper.ts";
 
 const flags = parse(Deno.args, {
-  string: ["levels"],
+  string: ["levels", "output"],
   default: { levels: "4" },
 });
 const url = Deno.args[0];
@@ -17,12 +17,9 @@ if (isNaN(levels)) {
   throw new Error("levels must be a number");
 }
 
-const urls = await scrapeRecursive(new URL(url), levels);
-console.log(urls);
-
-/**
- * What would I like to do more with this?
- * - I would consider adding a few more CLI options to output the collected results to file
- * - I would refactor this mod.ts so it importable as a Deno module.
- * - I would introduce concurrency to the scraper to speed up the scraping process.
- */
+const urls = await scrapeRecursive(new URL(url), levels, flags.output);
+if (flags.output) {
+  console.log(`📝 Output written to ${flags.output}`);
+} else {
+  console.log(urls);
+}

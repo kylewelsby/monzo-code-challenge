@@ -1,3 +1,5 @@
+import { posix } from "https://deno.land/std/path/mod.ts";
+
 import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 
 /**
@@ -15,7 +17,7 @@ export async function scrape(inputUrl: URL) {
     if (document) {
       const links = document.querySelectorAll("a");
       const hrefs = Array.from(links).map((link) =>
-        (link as unknown as Element).getAttribute("href")!
+        (link as unknown as HTMLElement).getAttribute("href")!
       );
       const urls = hrefs.filter((href) => href !== null);
       return cleanupUrls(urls, inputUrl);
@@ -39,6 +41,7 @@ function cleanupUrls(urls: string[], inputUrl: URL) {
   urls = absoluteUrl(urls, inputUrl);
   urls = urlsOnly(urls);
   urls = subdomainSpecificUrls(urls, inputUrl);
+  urls = excludeFileAssets(urls);
   urls = uniq(urls);
   return sort(urls);
 }
@@ -72,6 +75,10 @@ function urlsOnly(urls: string[]) {
     url.search = "";
     return url.href;
   });
+}
+
+function excludeFileAssets(urls: string[]) {
+  return urls.filter((href) => posix.extname(new URL(href).pathname) === "");
 }
 
 function uniq(urls: string[]) {

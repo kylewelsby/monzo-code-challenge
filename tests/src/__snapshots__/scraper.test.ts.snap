@@ -2,8 +2,19 @@ export const snapshot = {};
 
 snapshot[`scrapeRecursive 1`] = `
 [
-  "https://monzo.com/",
-  "https://monzo.com/about/",
-  "https://monzo.com/blog/",
+  "http://localhost:8080/",
+  "http://localhost:8080/accessibility/",
+  "http://localhost:8080/features/savings/",
+  "http://localhost:8080/features/travel/",
+  "http://localhost:8080/flex/",
+  "http://localhost:8080/fraud/",
+  "http://localhost:8080/i/business",
+  "http://localhost:8080/i/security/",
+  "http://localhost:8080/loans/",
+  "http://localhost:8080/money-worries/",
+  "http://localhost:8080/monzo-plus/",
+  "http://localhost:8080/monzo-premium/",
+  "http://localhost:8080/our-social-programme/",
+  "http://localhost:8080/service-quality-results/",
 ]
 `;
