@@ -10,7 +10,8 @@
 ✔ Expand the simple script to crawl deeper into the site @started(23-05-24 10:16) @done(23-05-24 10:58) @lasted(42m15s)
   Ensure the script is not crawling the same page twice
   Handle recursive scraping of the website
-☐ Refactor the code, cleaning and adding comments
-  - Add comments to the code
-  - Refactor the code to be more readable
-  - Add a .github/workflows/codeql-analysis.yml file to the repository
+✔ Refactor the code, cleaning and adding comments @done(23-05-24 16:09)
+  ✔ Add comments to the code @done(23-05-24 16:09)
+  ✔ Refactor the code to be more readable @started(23-05-24 11:08) @done(23-05-24 11:58) @lasted(50m)
+
+✔ test when the page contains an empty href @done(23-05-24 16:13)
