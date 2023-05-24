@@ -7,17 +7,22 @@ import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts
  * @returns list of URLS for the page
  */
 export async function scrape(inputUrl: URL) {
-  const response = await fetch(inputUrl.href);
-  const html = await response.text();
-  const parser = new DOMParser();
-  const document = parser.parseFromString(html, "text/html");
-  if (document) {
-    const links = document.querySelectorAll("a");
-    const hrefs = Array.from(links).map((link) =>
-      (link as unknown as Element).getAttribute("href")!
-    );
-    const urls = hrefs.filter((href) => href !== null);
-    return cleanupUrls(urls, inputUrl);
+  try {
+    const response = await fetch(inputUrl.href, { redirect: "follow" });
+    const html = await response.text();
+    const parser = new DOMParser();
+    const document = parser.parseFromString(html, "text/html");
+    if (document) {
+      const links = document.querySelectorAll("a");
+      const hrefs = Array.from(links).map((link) =>
+        (link as unknown as Element).getAttribute("href")!
+      );
+      const urls = hrefs.filter((href) => href !== null);
+      return cleanupUrls(urls, inputUrl);
+    }
+  } catch (e) {
+    console.log("Failed to scarpe URL: ", inputUrl.href);
+    console.error(e);
   }
   return [];
 }
@@ -29,22 +34,50 @@ export async function scrape(inputUrl: URL) {
  * @params inputUrl - the top level URL
  * @returns list of cleaned up URLs
  */
-function cleanupUrls(urls: (string)[], inputUrl: URL) {
-  const expandedHrefs = urls.map((href) => {
+function cleanupUrls(urls: string[], inputUrl: URL) {
+  urls = hyperlinksOnly(urls);
+  urls = absoluteUrl(urls, inputUrl);
+  urls = urlsOnly(urls);
+  urls = subdomainSpecificUrls(urls, inputUrl);
+  urls = uniq(urls);
+  return sort(urls);
+}
+
+/* Helper functions */
+function absoluteUrl(urls: string[], inputUrl: URL) {
+  return urls.map((href) => {
     if (href && href.startsWith("http")) {
       return href;
     }
     return `${inputUrl.origin}${href}`;
   });
+}
 
-  const subdomainSpecificHrefs = expandedHrefs.filter((href) => {
+function subdomainSpecificUrls(urls: string[], inputUrl: URL) {
+  return urls.filter((href) => {
     return href && href.includes(`${inputUrl.origin}`);
   });
-  const removeAnchors = subdomainSpecificHrefs.map((href) =>
-    href?.split("#")[0]
+}
+
+function hyperlinksOnly(urls: string[]) {
+  return urls.filter((href) =>
+    href?.startsWith("http") || href?.startsWith("/")
   );
-  const cleanedUrls = removeAnchors.map((href) => new URL(href).href);
-  const uniqueHrefs = Array.from(new Set(cleanedUrls));
-  const sortedHrefs = uniqueHrefs.sort();
-  return sortedHrefs;
+}
+
+function urlsOnly(urls: string[]) {
+  return urls.map((href) => {
+    const url = new URL(href);
+    url.hash = "";
+    url.search = "";
+    return url.href;
+  });
+}
+
+function uniq(urls: string[]) {
+  return Array.from(new Set(urls));
+}
+
+function sort(urls: string[]) {
+  return urls.sort();
 }

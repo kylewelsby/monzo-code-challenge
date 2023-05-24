@@ -44,7 +44,6 @@ Deno.test("scrapeRecursive", async (t) => {
 
   const urls = await scrapeRecursive(
     new URL("https://monzo.com"),
-    undefined,
     1,
   );
   await assertSnapshot(t, urls);

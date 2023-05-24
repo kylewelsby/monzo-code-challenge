@@ -1,22 +1,22 @@
 import { scrape } from "./scrape.ts";
 
-const levelsDeep = 3;
-
 /**
  * Scrape the website recursively for urls
  *
  * @param inputUrl - the URL to scrape
+ * @param maxLevel - the maximum level of recursion
  * @param visitedUrls - visited URLs (used on recursive calls)
  * @param level - the current level of recursion
  * @returns a list of URLs
  */
 export async function scrapeRecursive(
   inputUrl: URL,
-  visitedUrls: Set<string> = new Set<string>(),
+  maxLevel = 4,
   level = 0,
+  visitedUrls: Set<string> = new Set<string>(),
 ) {
   visitedUrls.add(inputUrl.href);
-  if (level > levelsDeep) {
+  if (level > maxLevel) {
     console.debug(`Level:${level} - Is too deep, returning`);
     return Array.from(visitedUrls);
   }
@@ -25,7 +25,7 @@ export async function scrapeRecursive(
 
   for (const link of topLevelUrls) {
     if (!visitedUrls.has(link)) {
-      await scrapeRecursive(new URL(link), visitedUrls, level + 1);
+      await scrapeRecursive(new URL(link), maxLevel, level + 1, visitedUrls);
     }
   }
 

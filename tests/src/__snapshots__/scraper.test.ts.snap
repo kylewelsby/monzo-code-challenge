@@ -5,6 +5,5 @@ snapshot[`scrapeRecursive 1`] = `
   "https://monzo.com/",
   "https://monzo.com/about/",
   "https://monzo.com/blog/",
-  "https://monzo.com/blog/1",
 ]
 `;
