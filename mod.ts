@@ -3,7 +3,7 @@
 /// <reference lib="dom.asynciterable" />
 /// <reference lib="deno.ns" />
 
-import { scrape } from "./src/scraper.ts";
+import { scrapeRecursive } from "./src/scraper.ts";
 const url = Deno.args[0];
-const urls = await scrape(new URL(url));
+const urls = await scrapeRecursive(new URL(url));
 console.log(urls);

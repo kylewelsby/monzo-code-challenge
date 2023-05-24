@@ -32,3 +32,28 @@ export async function scrape(inputUrl: URL) {
   console.error("No links found, could not parse the document");
   return [];
 }
+
+const levelsDeep = 1;
+
+export async function scrapeRecursive(
+  inputUrl: URL,
+  visitedUrls: Set<string> = new Set<string>(),
+  level = 0,
+) {
+  console.debug(`Scraping recursive ${inputUrl.href}`);
+  visitedUrls.add(inputUrl.href);
+  console.debug(`Level ${level}`);
+  if (level > levelsDeep) {
+    console.debug(`Level ${level} is too deep, returning`);
+    return [];
+  }
+  const topLevelUrls = await scrape(inputUrl);
+
+  for (const link of topLevelUrls) {
+    if (!visitedUrls.has(link)) {
+      await scrapeRecursive(new URL(link), visitedUrls, level + 1);
+    }
+  }
+
+  return Array.from(visitedUrls);
+}

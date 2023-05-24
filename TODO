@@ -7,5 +7,10 @@
   Theres a concept in Deno that allow the runtime to launch [workers](https://deno.com/manual@v1.33.4/runtime/workers) on different threads.
   Ths might be useful to crawl inner pages and spread the load to different thread on the machine.
 ✔ Write a simple script to fetch the hyperlinks found on a page @started(23-05-24 09:44) @done(23-05-24 10:16) @lasted(32m4s)
-☐ Expand the simple script to crawl deeper into the site @started(23-05-24 10:16)
+✔ Expand the simple script to crawl deeper into the site @started(23-05-24 10:16) @done(23-05-24 10:58) @lasted(42m15s)
   Ensure the script is not crawling the same page twice
+  Handle recursive scraping of the website
+☐ Refactor the code, cleaning and adding comments
+  - Add comments to the code
+  - Refactor the code to be more readable
+  - Add a .github/workflows/codeql-analysis.yml file to the repository
