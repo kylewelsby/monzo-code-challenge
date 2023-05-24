@@ -1,0 +1,8 @@
+✔ Start repository for Code Challenge @started(23-05-24 09:10) @done(23-05-24 09:20) @lasted(10m00s)
+✔ Research a cli interface with deno @started(23-05-24 09:20) @done(23-05-24 09:30) @lasted(30m00s)
+  - https://examples.deno.land/command-line-arguments
+  I will use `Deno.args` to get the arguments passed to the cli.
+  I have additional room to use flags to accept optons or modifiers if needed.
+☐ Research methods concurrency executing scripts with Deno
+☐ Write a simple script to fetch the hyperlinks found on a page
+☐ Implement the script to
